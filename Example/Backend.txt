@@ -1,0 +1,320 @@
+Thing 2 I’m Proud Of (Backend): Designing a Retry-Safe, Scalable Backend with Caching and Correctness Guarantees
+
+“On the backend, I’m particularly proud of designing and stabilizing a set of NestJS-based services where correctness under load mattered more than raw speed.”
+
+At Flywl and SL Technocrats, I worked on APIs that handled frequent reads, asynchronous processing, and external integrations. As traffic increased, two problems surfaced:
+
+Database load was growing disproportionately
+
+Some operations needed to be safe against retries and partial failures
+
+I approached this from a systems perspective, not just an API perspective.
+
+Database & performance foundation
+
+We were using PostgreSQL with TypeORM, so the first step was visibility:
+
+Analyzed slow queries using EXPLAIN ANALYZE
+
+Identified missing and inefficient indexes
+
+Tuned query patterns instead of blindly adding indexes
+
+Based on actual access patterns:
+
+Added compound indexes for high-frequency filters
+
+Refactored queries to avoid unnecessary joins
+
+Ensured pagination was index-backed, not offset-heavy
+
+This stabilized baseline performance and supported 99.9% uptime.
+
+Caching with correctness
+
+Next, I introduced Redis caching for read-heavy endpoints like news and frequently accessed metadata.
+
+But I was careful not to treat caching as a shortcut.
+
+Used deterministic cache keys based on query parameters
+
+Applied TTLs aligned with data volatility
+
+Implemented explicit cache invalidation on writes
+
+This reduced DB load by ~50% and improved API latency by ~30%, without serving stale or incorrect data.
+
+Reliability & retry safety
+
+In another backend system involving document processing and real-time updates:
+
+I assumed network retries and duplicate requests were normal
+
+APIs were designed to be idempotent wherever applicable
+
+Used schema validation to reject malformed input early
+
+Added rate limiting to protect downstream services
+
+For async workflows:
+
+Used message-based patterns and event-driven updates
+
+Integrated AWS SNS for decoupled notifications
+
+Ensured services could fail independently without cascading failures
+
+Observability & production readiness
+
+To make the system operable:
+
+Integrated CloudWatch for logs and metrics
+
+Added structured logging to trace request lifecycles
+
+Ensured errors were actionable, not just descriptive
+
+Outcome
+
+Backend throughput improved by ~35%
+
+Reduced operational incidents
+
+Safer retries and better fault isolation
+
+Systems scaled without accumulating hidden technical debt
+
+What I’m proud of here is designing backend systems that expect failure, tolerate retries, and remain correct under pressure.
+
+
+
+
+
+
+
+
+Interview Story: Designing and Integrating an Enterprise-Grade SSO System
+
+“One of the more complex systems I worked on was integrating Single Sign-On across multiple internal applications using OpenID Connect, where security, correctness, and user experience all mattered equally.”
+
+Context
+
+We had multiple applications:
+
+A Next.js frontend
+
+Several NestJS backend services
+
+A mix of internal dashboards and customer-facing tools
+
+Initially, each application handled authentication independently using local JWTs. This caused:
+
+Multiple logins for the same user
+
+Inconsistent authorization rules
+
+Difficult MFA enforcement
+
+No centralized way to revoke access
+
+So the goal was to move to true SSO, not just shared tokens.
+
+High-Level Architecture Decision
+
+We chose an Identity Provider (IdP) that supported OpenID Connect (OIDC).
+
+Key architectural decision:
+
+Applications should never authenticate users directly. They should only verify identity asserted by the IdP.
+
+This meant:
+
+IdP handles credentials, MFA, sessions
+
+Applications become relying parties
+
+Trust is established via cryptographic token validation
+
+Authentication Flow (OIDC Authorization Code Flow)
+
+I implemented the Authorization Code Flow with PKCE, because:
+
+It’s secure for browser-based apps
+
+Prevents authorization code interception
+
+Avoids exposing tokens in URLs
+
+Flow in practice:
+
+User hits the Next.js app
+
+App detects no session → redirects to IdP /authorize
+
+User authenticates once at IdP
+
+IdP redirects back with an authorization code
+
+Backend exchanges code for:
+
+ID Token (identity)
+
+Access Token (authorization)
+
+Optional Refresh Token
+
+The frontend never directly handled tokens. Everything sensitive flowed through the backend.
+
+Token Validation (Backend Depth)
+
+On the NestJS side, I implemented strict token validation:
+
+Verified JWT signature using IdP’s public keys (JWKS endpoint)
+
+Validated:
+
+iss (issuer)
+
+aud (audience)
+
+exp and nbf
+
+Rejected tokens with mismatched client IDs or expired timestamps
+
+This ensured:
+
+The backend never trusted a token unless it was cryptographically and contextually valid.
+
+Session Strategy (Important Detail)
+
+We intentionally did not rely solely on JWTs.
+
+Instead:
+
+Tokens were stored server-side
+
+Backend issued a short-lived HTTP-only session cookie
+
+Cookie mapped to user identity and roles
+
+Why?
+
+JWT revocation is hard
+
+Server-side sessions allow instant logout
+
+Better protection against token theft
+
+This hybrid approach gave us both scalability and control.
+
+Authorization & RBAC
+
+Authentication was centralized, but authorization stayed local.
+
+I implemented:
+
+Role-based access control (RBAC)
+
+Permissions derived from claims in the ID token
+
+Fine-grained guards in NestJS using decorators
+
+Example:
+
+IdP asserts user identity
+
+Backend decides what that identity can do
+
+This separation avoided coupling business logic to the IdP.
+
+SSO Across Multiple Apps
+
+Here’s where true SSO showed up.
+
+Once a user authenticated:
+
+The IdP maintained a session
+
+Subsequent apps redirected to IdP
+
+IdP immediately issued tokens without prompting login again
+
+From the user’s perspective:
+
+One login → seamless access everywhere
+
+From the system’s perspective:
+
+One authoritative session, many trusting services
+
+Logout & Revocation (Often Missed)
+
+Logout was tricky.
+
+We implemented:
+
+Local logout: invalidate app session
+
+Global logout: terminate IdP session
+
+Additionally:
+
+Token introspection for sensitive operations
+
+Short token lifetimes to reduce blast radius
+
+Forced re-auth on role changes
+
+This ensured access could be revoked centrally.
+
+Security Considerations
+
+I had to actively defend against:
+
+CSRF (SameSite cookies + CSRF tokens)
+
+XSS (HTTP-only cookies, strict CSP)
+
+Token replay attacks
+
+Misconfigured redirect URIs
+
+Every redirect URI was:
+
+Pre-registered
+
+Strictly validated
+
+Environment-specific
+
+Trade-offs & Lessons
+
+Trade-offs:
+
+More infrastructure complexity
+
+Slight latency during initial auth redirect
+
+Heavier setup compared to local auth
+
+But the benefits were substantial:
+
+Centralized security policies
+
+Easier MFA rollout
+
+Clean separation of concerns
+
+Scalable identity management
+
+Outcome
+
+One-login experience across apps
+
+Centralized identity and access control
+
+Reduced security incidents
+
+Easier onboarding of new services
+
+What I’m proud of is that the system was designed assuming failure, attacks, and scale, not ideal conditions.

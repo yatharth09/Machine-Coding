@@ -1,0 +1,71 @@
+Thing 1 I’m Proud Of (Frontend): Re-architecting a Performance-Critical React + Next.js UI
+
+“One frontend task I’m particularly proud of was rebuilding a performance-critical UI in a React + Next.js application where scaling exposed architectural flaws.”
+
+At Flywl, we had a content-heavy product with dashboards, lists, and real-time updates. As usage grew, users started reporting sluggish interactions, delayed state updates, and occasional UI freezes, especially on mid-range devices.
+
+Instead of immediately refactoring, I first measured the problem.
+
+I used:
+
+React Profiler to identify components with high render frequency
+
+Chrome Performance tab to inspect scripting and layout thrashing
+
+Core Web Vitals metrics to correlate user complaints with real performance data
+
+What I found was a pattern:
+
+Global state updates were triggering wide re-renders
+
+Derived data was being recomputed on every render
+
+Large lists were rendered eagerly instead of lazily
+
+Client-side bundles were heavier than needed due to shared imports
+
+The core issue wasn’t React itself. It was poor render boundaries and an unpredictable data layer.
+
+Technical changes I made
+
+First, I restructured state management:
+
+Introduced Redux Toolkit for predictable global state
+
+Shifted server data fetching to React Query, separating server state from UI state
+
+Normalized responses so components subscribed only to the minimal data they needed
+
+This alone reduced unnecessary re-renders significantly.
+
+Next, I focused on rendering efficiency:
+
+Wrapped pure components with React.memo
+
+Used useMemo and useCallback selectively, only where profiling proved benefit
+
+Introduced list virtualization for large datasets
+
+Isolated expensive components like charts into independently memoized trees
+
+On the Next.js side:
+
+Implemented dynamic imports and route-level code splitting
+
+Reduced client-side JavaScript by leveraging React Server Components
+
+Cleaned up shared utility imports that were unintentionally bloating bundles
+
+One important trade-off I consciously made was slightly delaying non-critical UI updates to batch renders. This made the UI feel smoother under load without affecting correctness.
+
+Outcome
+
+Client-side JS size reduced by ~35%
+
+Unnecessary re-renders reduced by ~40%
+
+Faster page load and interaction responsiveness
+
+More predictable performance as features scaled
+
+What I’m proud of here is not just the optimization, but recognizing that frontend performance is a data-flow and architecture problem before it’s a React problem.

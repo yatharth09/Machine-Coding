@@ -1,0 +1,4 @@
+1. Should be able to manage inventory (add/remove) products
+2. Should be able to split the order into two as per the dark stores
+3. Have a refilling strategy of products based on minimum threshold or weekly supplies
+4. See items from all the dark stores in the range of the user 
