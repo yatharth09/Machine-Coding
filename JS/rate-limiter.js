@@ -131,8 +131,3 @@ class tokenRateLimiter {
     }
 }
 
-
-// 4️⃣ Implement a Rate Limiter Middleware (Backend-Style)
-// ❓ Question
-
-// Build a middleware-like function for API requests.
