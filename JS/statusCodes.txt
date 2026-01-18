@@ -1,0 +1,21 @@
+200: Successful request
+201: Successful POST request, something has been created successfully
+204: Successful request without any response for example a delete task 
+
+301: Resource has been permanetly moved, Browser redirects to the new URL, permanet redirects
+302: Temporary redirect
+304: Tells if a resource has updated/changed, can be used to tell if the cache needs to be updated or not 
+
+400: Server got the request but it wont process it as the request is invalid 
+401: Unauthenticated/ invalid credentials, the serve ris unable to identify the user
+403: Forbidden, the server identifies the user but the user is not allowed to access the resource
+404: Not Found, server checked the entire directory but wasnt able to find the required response
+405: Method required to access the endpoint is invalid 
+429: hiting the rate limit with the number of requests
+
+500: Internal server error, something wrong with the server side logic 
+502: A middleman server got wrong response from one of the other servers it relies on 
+503: Server is temporarily unavailable/ under maintanence or overwhelmed
+
+
+

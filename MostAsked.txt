@@ -2,16 +2,16 @@ If You Want a Winning Prep Strategy
 
 If you can confidently implement these without looking up syntax:
 
-Promise pool with concurrency
+Promise pool with concurrency (DONE)
 
-Retry with exponential backoff
+Retry with exponential backoff (DONE)
 
-Debounce + throttle
+Debounce + throttle 
 
-LRU cache
+LRU cache (DONE)
 
 Event emitter
 
-Rate limiter
+Rate limiter (DONE)
 
 You’re interview-ready for 80 percent of product companies.

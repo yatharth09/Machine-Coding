@@ -1,0 +1,43 @@
+ALL THE DIFFERENT KINDS OF API's
+
+1. REST (Representational State Transfer) can be compared to a waiter who goes to the kitchen(server) and gets food(data) for you 
+    - A simple way for applications to talk with each other over the internet
+    - It uses http methods like GET, POST, PATCH, PUT, DELETE
+    - REST API's are stateless that means the server does not remember your previous state, every request has all the information required for prossesing the request
+    - REST is platform independent, mobile apps, ios apps, web apps all can talk with the same REST server
+    - Not good for bank transfer and enterprise systems 
+
+2. SOAP (Simple object access protocol) If REST is like a casual phone call SOAP is like a formal business contract
+    - Strict rules
+    - Very specific structure
+    - Protocol independent
+    - Built in mechanisms for error handling, security and transactional support
+
+3. gRPC (Google Remote Procedural Call)
+    - Instead of sending data between server, our app on one server can all the function present on some other function
+    - Transfers data in compact binary format(lightning fast to process) instead of json objects used in REST
+    - 4 powerful communication patterns
+        - Simple request - response just like REST
+        - Server streaming for live updates 
+        - Client streaming for sending continuous data
+        - Bi-directional streaming, where both sides can chat at once in real time
+    - 7-10 times faster than REST API's 
+
+4. GraphQL (Graph Query Language)
+    - REST causes overfetching or underfetching of data which is solved by graphQL as it sends only the data asked by the Client
+
+5. Webhooks 
+    - When we get the data when something changes in the backend without calling it from the frontend (like notification service)
+    - Most used for automating systems or keep the system in sync
+
+6. Websockets
+    - Its like creating a connection between the client and server, once the connection is established then they can communicate bidirectionally with each other
+    - Starts with a handshake (Browser sends a special http request asking to upgrade the connection to websockets)
+
+7. WebRTC (Web real time communication)
+    - Full framework the enables peer to peer communication
+    - Data does not have to float through servers 
+    - Usecases include: video streaming, gaming, screen sharing etc
+    
+
+

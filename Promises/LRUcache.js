@@ -10,7 +10,7 @@ class LRU {
         const val = this.cache.get(key)
         this.cache.delete(key)
         this.cache.set(key, val)
-        return val
+        return val.value
 
     }
 
@@ -24,4 +24,46 @@ class LRU {
         this.cache.set(key, value)
         
     }
+}
+
+
+class LRUWithTTL extends LRU {
+    constructor(limit, ttlms){
+        super(limit)
+        this.ttl = ttlms
+    }
+
+    get(key){
+        const obj = this.cache.get(key)
+        if(obj === undefined){
+            return -1
+        }
+        if(Date.now() - obj.timeStamp < this.ttl){
+            obj.timeStamp = Date.now()
+            return super.get(key)
+        }
+
+        this.cache.delete(key)
+        return -1
+    }
+
+    put(key, value){
+        const obj = this.cache.get(key)
+        const timeStamp = Date.now()
+        if(obj === undefined){
+            const newObj = {
+                value,
+                timeStamp
+            }
+            return super.put(key, newObj)
+            
+        }
+
+        obj.timeStamp = timeStamp
+        obj.value = value
+
+        return super.put(key, obj)
+
+    }
+
 }

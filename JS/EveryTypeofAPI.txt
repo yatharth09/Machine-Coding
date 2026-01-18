@@ -1,0 +1,27 @@
+MCP (Model Context Protocol)
+    - Standarized way for AI models to connect with external data sources and tools
+    - Write MCP connection code once and any AI tool that supports MCP with connect to it instantly 
+
+SSE (Server Sent Event)
+    - Let the server push updates to the Browser whenever it wants over a single http connection
+    - Browser sends one request but instead of closing the connection the server retains the connection and keeps on sending 
+      data according to server logic
+    - live sports score app 
+
+MQTT (Message Queing Telemetry Transport)
+    - Ligtweight pub-sub messaging protocol for devices with limited bandwidth or battery like iot gadgets
+    - Used to create smart home devices
+    - Acts as a radio station which has topics and sends data to all the subsribers who have subscribed to that topic 
+
+AMQP (Advanced Message Queing Protocol)
+    - Guranteed reliable message delivery
+    - Prioritizes never ever losing a message in any scenario
+    - It has message acknowledgements, persistent storage, persistent transactions
+    - RabbitMQ is the most popular implementation with message routing based on rules, clustering for high availability
+
+Event-Driven API's
+    - Independent services that are listening to event triggers and start working only when an event is triggered
+    - Apache kafka works on this architecture but with a very high scale 
+    - Traditional message queues delete message after its consumed but kafka keeps everything 
+
+
